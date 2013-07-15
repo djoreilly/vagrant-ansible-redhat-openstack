@@ -1,0 +1,5 @@
+[openstack_controller]
+controller ansible_ssh_host=192.168.2.41
+
+[openstack_compute]
+compute ansible_ssh_host=192.168.2.42
