@@ -15,6 +15,8 @@ A Vagrant script to create two CentOS 6.4 VirtualBox VMs as targets for the Ansi
 
 #Notes
 
+The vagrant box at http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130427.box is very slow to download - it took >1.5 hours - but it only needs to be done the first time.
+ 
 ##External access for controller node and instances
 
 The installer also creates a Quantum router which adds another default route to the controller's route table (IP namespaces are not being used):
@@ -61,4 +63,4 @@ ansible-redhat-openstack/playbooks/vm.yml \
 Note: if the VM appears to be stuck in state spawning, it is because there is keypair and metadata injection happening. The instance eventually came up after 10 minutes, but ansible reported "msg: Timeout waiting for the server to come up.. Please check manually"
 
 
-Note: the playbooks are actually using the ${VARO}/group_vars/all because of the inventory file, whereas site.yml
+Note: the playbooks are actually using the ${VARO}/group_vars/all because of the inventory file setting, whereas site.yml uses the one in ansible-redhat-openstack/.
