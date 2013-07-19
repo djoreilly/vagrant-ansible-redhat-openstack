@@ -6,11 +6,19 @@ vagrant-ansible-redhat-openstack
 A Vagrant script to create two CentOS 6.4 VirtualBox VMs as targets for the Ansible OpenStack installer from [here](https://github.com/ansible/ansible-redhat-openstack.git).
 
 
+##Requirements
+* [Ansible](http://www.ansibleworks.com/docs/gettingstarted.html) >= 1.2
+* [Vagrant](http://www.vagrantup.com) >= 1.2.2
+* [VirtualBox](https://www.virtualbox.org) >= 4.2
+* git
+* 2.5 GB RAM (or tweak Vagrantfile)
+
 ##Steps
 
-* mkdir topdir; cd topdir
-* git clone git@github.com:djoreilly/vagrant-ansible-redhat-openstack.git
-* bash vagrant-ansible-redhat-openstack/install.sh
+
+    * mkdir topdir; cd topdir
+    * git clone git@github.com:djoreilly/vagrant-ansible-redhat-openstack.git
+    * bash vagrant-ansible-redhat-openstack/install.sh
 
 
 #Notes
@@ -43,21 +51,22 @@ and do any additional work outside to ensure 1.1.1.1 gets further natting for In
 
 ##Running the playbooks
 
-export VARO=vagrant-ansible-redhat-openstack
 
-$ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
-ansible-redhat-openstack/playbooks/image.yml \
--e "image_name=cirros image_url=https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img"
+    export VARO=vagrant-ansible-redhat-openstack
 
+    $ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
+    ansible-redhat-openstack/playbooks/image.yml \
+    -e "image_name=cirros image_url=https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img"
 
-$ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
-ansible-redhat-openstack/playbooks/tenant.yml \
--e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net subnet_name=t1subnet subnet_cidr=2.2.2.0/24 tunnel_id=3"
+    $ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
+    ansible-redhat-openstack/playbooks/tenant.yml \
+    -e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net subnet_name=t1subnet subnet_cidr=2.2.2.0/24 tunnel_id=3"
 
-
-$ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
-ansible-redhat-openstack/playbooks/vm.yml \
--e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net vm_name=t1vm flavor_id=170ed51a-a833-4681-8c6a-03e5b94176a6 keypair_name=t1keypair image_name=cirros"
+    # note: create a flavor and set it here
+    $ FLAVOR=170ed51a-a833-4681-8c6a-03e5b94176a6
+    $ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
+    ansible-redhat-openstack/playbooks/vm.yml \
+    -e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net vm_name=t1vm flavor_id=$FLAVOR keypair_name=t1keypair image_name=cirros"
 
 
 Note: if the VM appears to be stuck in state spawning, it is because there is keypair and metadata injection happening. The instance eventually came up after 10 minutes, but ansible reported "msg: Timeout waiting for the server to come up.. Please check manually"

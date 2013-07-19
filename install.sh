@@ -16,7 +16,7 @@ cd ..
 #git clone https://github.com/ansible/ansible-redhat-openstack.git
 git clone https://github.com/djoreilly/ansible-redhat-openstack.git
 cd ansible-redhat-openstack
-git checkout allow-any-ethX
+git checkout metadata
 cd ..
 
 sed -i 's/iface: eth0/iface: eth1/' ansible-redhat-openstack/group_vars/all
