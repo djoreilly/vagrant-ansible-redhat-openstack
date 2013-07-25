@@ -1,7 +1,6 @@
 vagrant-ansible-redhat-openstack
 ================================
 
-##Work-in-progress
 
 A Vagrant script to create two CentOS 6.4 VirtualBox VMs as targets for the Ansible OpenStack installer from [here](https://github.com/ansible/ansible-redhat-openstack.git).
 
@@ -62,11 +61,15 @@ and do any additional work outside to ensure 1.1.1.1 gets further natting for In
     ansible-redhat-openstack/playbooks/tenant.yml \
     -e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net subnet_name=t1subnet subnet_cidr=2.2.2.0/24 tunnel_id=3"
 
-    # note: create a flavor and set it here
-    $ FLAVOR=170ed51a-a833-4681-8c6a-03e5b94176a6
+    $ ansible controller --user vagrant --inventory-file ${VARO}/hosts \
+      --private-key ${VARO}/vagrant_private_key -m command -a \
+      "nova --os-username {{ admin_tenant_user }} --os-tenant-name {{ admin_tenant }} \
+      --os-password {{ admin_pass }} --os-auth-url http://127.0.0.1:5000/v2.0 \
+      flavor-create m1.nano 42 64 0 1"
+
     $ ansible-playbook -v --user vagrant --inventory-file ${VARO}/hosts --private-key ${VARO}/vagrant_private_key \
     ansible-redhat-openstack/playbooks/vm.yml \
-    -e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net vm_name=t1vm flavor_id=$FLAVOR keypair_name=t1keypair image_name=cirros"
+    -e "tenant_name=tenant1 tenant_username=t1admin tenant_password=abc network_name=t1net vm_name=t1vm flavor_id=42 keypair_name=t1keypair image_name=cirros"
 
 
 Note: if the VM appears to be stuck in state spawning, it is because there is keypair and metadata injection happening. The instance eventually came up after 10 minutes, but ansible reported "msg: Timeout waiting for the server to come up.. Please check manually"
